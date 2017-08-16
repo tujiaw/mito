@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactModal from 'react-modal'
 import LeftRightButton from '../../components/LeftRightButton'
-import { ANTI_LEECH } from '../../config'
+import { ANTI_LEECH, getNewImageUrl } from '../../config'
 
 class ShowImages extends Component {
   state = {
@@ -58,7 +58,7 @@ class ShowImages extends Component {
           <div style={{display: 'flex', justifyContent: 'center'}}>
             {
               list && list[this.state.showIndex] 
-              ? <img src={ANTI_LEECH + list[this.state.showIndex].big} alt=""/> 
+              ? <img src={getNewImageUrl(list[this.state.showIndex].big)} alt=""/> 
               : null
             }
           </div>

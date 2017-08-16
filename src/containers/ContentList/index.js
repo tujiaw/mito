@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Collapse } from 'antd';
-import { ANTI_LEECH } from '../../config'
+import { ANTI_LEECH, getNewImageUrl } from '../../config'
 const Panel = Collapse.Panel;
 
+let index = 0
 class ContentList extends Component {
   state = {  }
 
@@ -17,6 +18,7 @@ class ContentList extends Component {
       <Collapse 
         bordered={false} 
         defaultActiveKey={['0']}
+        key={++index}
       >
         {this.props.list && this.props.list.map((item, index) => {
           return <Panel header={item.title || ''} key={item.itemId || index}>
@@ -25,7 +27,7 @@ class ContentList extends Component {
                 return <img key={`${item.itemId}-${subIndex}`} 
                   style={{margin: 3}} 
                   alt={subIndex} 
-                  src={ANTI_LEECH + subItem.small} 
+                  src={getNewImageUrl(subItem.small)} 
                   onClick={this.onClick.bind(this, item.itemId, subIndex)}
                 />
               })}

@@ -5,6 +5,8 @@ import ContentList from './ContentList'
 import ShowImages from './ShowImages'
 import { getImages } from '../utils/get'
 import LeftRightButton from '../components/LeftRightButton'
+import { postData } from '../utils/fetch'
+import { DOWNLOAD_URL } from '../config'
 const { Header, Content, Sider } = Layout;
 
 const g_pagebeanCache = {}
@@ -64,16 +66,34 @@ class Home extends React.Component {
     this.setState({ isLoading: true })
     getImages(type, page).then(res => {
       if (res.showapi_res_body && res.showapi_res_body.pagebean) {
-        console.log(res.showapi_res_body.pagebean)
+        const curPagebean = res.showapi_res_body.pagebean
         this.setState({ 
           isLoading: false,
           curType: type,
           curPage: page,
-          pagebean: res.showapi_res_body.pagebean,
+          pagebean: curPagebean,
           leftDisabled: page <= 1,
-          rightDisabled: page >= res.showapi_res_body.pagebean.allPages
+          rightDisabled: page >= curPagebean.allPages
         })
-        g_pagebeanCache[typePage] = res.showapi_res_body.pagebean
+        g_pagebeanCache[typePage] = curPagebean
+        
+        const imagesUrl = {
+          smallList: [],
+          bigList: [],
+        }
+        for (const content of curPagebean.contentlist) {
+          for (const item of content.list) {
+            imagesUrl.smallList.push(item.small)
+            imagesUrl.bigList.push(item.big)
+          }
+        }
+
+        console.log('post data:' + imagesUrl)
+        postData(DOWNLOAD_URL, imagesUrl).then(res => {
+          console.log('post data response:' + res)
+        }).catch(err => {
+          console.log(err)
+        })
       }
     }).catch(err => {
       this.setState({ isLoading: false })
